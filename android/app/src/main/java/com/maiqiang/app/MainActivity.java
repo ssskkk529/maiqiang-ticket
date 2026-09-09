@@ -35,7 +35,6 @@ public class MainActivity extends Activity {
         s.setDomStorageEnabled(true);            // 启用 localStorage（订单/观演人数据）
         s.setDatabaseEnabled(true);
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
-        s.setAppCacheEnabled(true);
         s.setAllowFileAccess(true);
         s.setAllowContentAccess(true);
         s.setMediaPlaybackRequiresUserGesture(false);
