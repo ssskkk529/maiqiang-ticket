@@ -1,0 +1,20 @@
+{
+  "name": "麦抢 · 演出抢票",
+  "short_name": "麦抢",
+  "description": "大麦风格演出抢票演示应用",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f5f7",
+  "theme_color": "#ff2e4d",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
