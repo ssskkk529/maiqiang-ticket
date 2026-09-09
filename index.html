@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#ff2e4d" />
+  <title>麦抢 · 演出抢票</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <meta name="apple-mobile-web-app-title" content="麦抢" />
+  <link rel="stylesheet" href="css/style.css?v=4" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ========== 首页 ========== -->
+    <section class="page page--home active" id="page-home">
+      <header class="home-header">
+        <div class="loc">
+          <span class="loc-city">上海</span>
+          <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
+        </div>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M10 4a6 6 0 104.47 10.03l4.25 4.25 1.41-1.41-4.25-4.25A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z"/></svg>
+          <span>搜索演唱会、话剧、体育赛事</span>
+        </div>
+      </header>
+
+      <div class="banner" id="banner">
+        <div class="banner-track" id="bannerTrack"></div>
+        <div class="banner-dots" id="bannerDots"></div>
+      </div>
+
+      <nav class="cate-nav" id="cateNav"></nav>
+
+      <div class="section-title">
+        <h2>🔥 热门抢票</h2>
+        <span class="st-sub">手慢无</span>
+      </div>
+      <div class="event-list" id="eventList"></div>
+
+      <div class="section-title">
+        <h2>⏰ 即将开售</h2>
+        <span class="st-sub">定好闹钟</span>
+      </div>
+      <div class="event-list" id="upcomingList"></div>
+
+      <div class="bottom-space"></div>
+    </section>
+
+    <!-- ========== 演出详情 ========== -->
+    <section class="page page--detail" id="page-detail">
+      <div class="detail-hero">
+        <img id="dPoster" alt="演出海报" />
+        <div class="hero-mask"></div>
+        <button class="back-btn" data-back>‹</button>
+      </div>
+      <div class="detail-body">
+        <h1 id="dTitle"></h1>
+        <div class="d-meta">
+          <span class="d-score" id="dScore"></span>
+          <span id="dWant"></span>
+        </div>
+        <div class="d-info-card">
+          <div class="d-row"><span class="d-label">演出时间</span><span id="dDate"></span></div>
+          <div class="d-row"><span class="d-label">演出场馆</span><span id="dVenue"></span></div>
+          <div class="d-row"><span class="d-label">购票规则</span><span class="d-tip">实名制 · 一票一证 · 不可转让</span></div>
+        </div>
+
+        <div class="d-block">
+          <h3>选择场次</h3>
+          <div class="chip-group" id="dSessions"></div>
+        </div>
+
+        <div class="d-block">
+          <h3>选择票档</h3>
+          <div class="price-grid" id="dPrices"></div>
+          <label class="switch-row">
+            <span>无票时自动接受相邻票档调剂（提高成功率）</span>
+            <input type="checkbox" id="dFallback" checked />
+            <span class="switch"></span>
+          </label>
+        </div>
+
+        <div class="d-block">
+          <h3>观演人 <em>实名制购票，每张票需 1 位观演人</em></h3>
+          <div class="viewer-pick" id="dViewers"></div>
+        </div>
+
+        <div class="d-block d-notice">
+          <h3>购票须知</h3>
+          <p id="dNotice"></p>
+        </div>
+        <div class="bottom-space"></div>
+      </div>
+
+      <footer class="detail-bar">
+        <div class="db-price">
+          <small>票价</small>
+          <b id="dBarPrice">¥ --</b>
+        </div>
+        <button class="btn-grab" id="dGrabBtn">立即抢购</button>
+      </footer>
+    </section>
+
+    <!-- ========== 抢票中 ========== -->
+    <section class="page page--grab" id="page-grab">
+      <button class="back-btn back-btn--dark" data-back>‹</button>
+      <div class="grab-wrap" id="grabWrap">
+        <!-- 倒计时状态 -->
+        <div class="grab-state" id="grabCountdown">
+          <div class="grab-poster"><img id="gPoster" alt="" /></div>
+          <h2 id="gTitle"></h2>
+          <p class="g-sub" id="gSession"></p>
+          <div class="cd-label">距离开售还有</div>
+          <div class="cd-timer" id="cdTimer">
+            <span class="cd-box" id="cdH">00</span><i>:</i><span class="cd-box" id="cdM">00</span><i>:</i><span class="cd-box cd-ms" id="cdS">00</span>
+          </div>
+          <div class="grab-config">
+            <label class="switch-row">
+              <span>开售自动抢票（毫秒级提交）</span>
+              <input type="checkbox" id="autoGrab" checked />
+              <span class="switch"></span>
+            </label>
+            <label class="switch-row">
+              <span>失败自动重试（最多 <b id="retryNum">5</b> 次）</span>
+              <input type="checkbox" id="autoRetry" checked />
+              <span class="switch"></span>
+            </label>
+          </div>
+          <button class="btn-grab btn-grab--big" id="cdBtn" disabled>等待开售</button>
+        </div>
+
+        <!-- 抢购进行状态 -->
+        <div class="grab-state" id="grabRunning" hidden>
+          <div class="radar">
+            <div class="radar-ring r1"></div>
+            <div class="radar-ring r2"></div>
+            <div class="radar-ring r3"></div>
+            <div class="radar-core">🎫</div>
+          </div>
+          <h2 id="runStage">正在提交订单…</h2>
+          <p class="g-sub" id="runDetail">已预选观演人，极速通道已建立</p>
+          <div class="queue-box" id="queueBox" hidden>
+            <div class="queue-num">排队中 <b id="queuePos">---</b></div>
+            <div class="queue-bar"><i id="queueBar"></i></div>
+            <div class="queue-tip">高峰期排队人数较多，请稍候…</div>
+          </div>
+          <div class="retry-tip" id="retryTip" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 抢票结果 ========== -->
+    <section class="page page--result" id="page-result">
+      <div class="result-wrap" id="resultWrap"></div>
+    </section>
+
+    <!-- ========== 我的 ========== -->
+    <section class="page page--mine" id="page-mine">
+      <header class="mine-header">
+        <div class="avatar">麦</div>
+        <div class="mine-info">
+          <b>抢票达人</b>
+          <span>已实名 · 抢票成功率 87%</span>
+        </div>
+      </header>
+
+      <div class="mine-stats">
+        <div><b id="statOrders">0</b><span>我的订单</span></div>
+        <div><b id="statViewers">0</b><span>观演人</span></div>
+        <div><b>0.0s</b><span>最快提交</span></div>
+      </div>
+
+      <div class="mine-card">
+        <div class="mine-row" id="mineViewersRow">
+          <span>👥 观演人管理</span><i>›</i>
+        </div>
+        <div class="mine-row" id="mineOrdersRow">
+          <span>📋 我的订单</span><i>›</i>
+        </div>
+        <div class="mine-row" id="mineTipRow">
+          <span>💡 抢票技巧</span><i>›</i>
+        </div>
+      </div>
+
+      <h3 class="mine-h3">我的订单</h3>
+      <div class="order-list" id="orderList"></div>
+      <div class="bottom-space"></div>
+    </section>
+
+    <!-- ========== 观演人管理 ========== -->
+    <section class="page page--viewers" id="page-viewers">
+      <header class="sub-header">
+        <button class="back-btn back-btn--dark" data-back>‹</button>
+        <b>观演人管理</b>
+      </header>
+      <div class="viewer-list" id="viewerManageList"></div>
+      <button class="btn-add-viewer" id="addViewerBtn">＋ 添加观演人</button>
+      <div class="bottom-space"></div>
+    </section>
+
+    <!-- ========== 底部 Tab ========== -->
+    <nav class="tabbar" id="tabbar">
+      <div class="tab active" data-tab="home">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 3l9 8h-3v9h-4v-6h-4v6H6v-9H3z"/></svg>
+        <span>首页</span>
+      </div>
+      <div class="tab" data-tab="mine">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5 0-9 2.5-9 6v2h18v-2c0-3.5-4-6-9-6z"/></svg>
+        <span>我的</span>
+      </div>
+    </nav>
+
+    <!-- 添加观演人弹窗 -->
+    <div class="modal" id="viewerModal" hidden>
+      <div class="modal-mask"></div>
+      <div class="modal-card">
+        <h3>添加观演人</h3>
+        <label class="field"><span>姓名</span><input id="vName" placeholder="请输入真实姓名" maxlength="10" /></label>
+        <label class="field"><span>身份证</span><input id="vIdCard" placeholder="请输入身份证号" maxlength="18" /></label>
+        <label class="field"><span>手机号</span><input id="vPhone" type="tel" placeholder="用于接收出票通知" maxlength="11" /></label>
+        <div class="modal-actions">
+          <button class="btn-ghost" id="vCancel">取消</button>
+          <button class="btn-primary" id="vSave">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 通用弹窗 -->
+    <div class="modal" id="tipModal" hidden>
+      <div class="modal-mask"></div>
+      <div class="modal-card modal-card--tip">
+        <h3 id="tipTitle">抢票技巧</h3>
+        <div class="tip-body" id="tipBody"></div>
+        <button class="btn-primary" id="tipOk">我知道了</button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+  </div>
+
+  <script src="js/data.js?v=3"></script>
+  <script src="js/app.js?v=3"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
+  </script>
+</body>
+</html>
