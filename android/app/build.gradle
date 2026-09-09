@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.maiqiang.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.maiqiang.app"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release { minifyEnabled false }
+        debug   { minifyEnabled false }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // 把构建时生成的 web 资源目录加入 assets 源
+    sourceSets {
+        main {
+            assets.srcDirs += layout.buildDirectory.dir('generated/web-assets')
+        }
+    }
+}
+
+// 构建前把仓库根目录的 H5 资源复制进 assets/web
+tasks.register('copyWebAssets', Copy) {
+    from('../../') {
+        include 'index.html'
+        include 'manifest.json'
+        include 'icon.svg'
+        include 'css/**'
+        include 'js/**'
+    }
+    into layout.buildDirectory.dir('generated/web-assets/web')
+}
+
+preBuild.dependsOn copyWebAssets
+
+dependencies {
+    // 纯系统 WebView，无需第三方依赖
+}
